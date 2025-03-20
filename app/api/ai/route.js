@@ -1,4 +1,4 @@
-import { Together } from 'together';
+import Together from 'together-ai';
 import { NextResponse } from 'next/server';
 import { questionnaires, emergencyMessage } from '../../../data/questionnaires';
 import { StreamingTextResponse } from 'ai';
