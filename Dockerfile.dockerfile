@@ -1,29 +1,33 @@
 # Sử dụng Node.js phiên bản LTS
 FROM node:18-alpine
 
-# Thiết lập thư mục làm việc trong container
+# Thiết lập thư mục làm việc
 WORKDIR /app
 
-# Sao chép tất cả file từ dự án vào container
+# Sao chép package.json
+COPY package.json ./
+
+# Cài đặt thư viện Together SDK chính thức thay vì thư viện không tồn tại
+RUN npm install @together-ai/sdk --save
+
+# Sao chép tất cả file trong dự án
 COPY . .
 
-# Cài đặt các dependencies từ package.json
-# Sau đó cài đặt thư viện Together AI từ npm với phiên bản cụ thể
-RUN npm install --production --no-package-lock && \
-    npm install @togetherapi/together@0.0.7
+# Thêm file adapter để map thư viện together cũ sang thư viện mới
+RUN echo 'const { TogetherAI } = require("@together-ai/sdk");\n\nclass Together {\n  constructor(apiKey) {\n    this.client = new TogetherAI({ apiKey });\n    this.chat = {\n      completions: {\n        create: async (options) => {\n          try {\n            const response = await this.client.chat.completions.create(options);\n            return response;\n          } catch (error) {\n            console.error("Together API error:", error);\n            throw error;\n          }\n        }\n      }\n    };\n  }\n}\n\nmodule.exports = { Together };' > together-adapter.js
 
-# Sửa đổi code cho phù hợp với thư viện @togetherapi/together
-RUN find . -type f -name "route.js" -exec sed -i 's/import { Together } from "together";/import { Together } from "@togetherapi\/together";/g' {} \;
+# Sửa file route.js để sử dụng adapter
+RUN sed -i "s/import { Together } from 'together';/const { Together } = require('..\/..\/..\/together-adapter.js');/" app/api/ai/route.js
 
-# Thiết lập biến môi trường cho production
+# Thiết lập biến môi trường
 ENV NODE_ENV=production
 ENV PORT=3000
 
 # Xây dựng ứng dụng
 RUN npm run build
 
-# Expose cổng mà ứng dụng sẽ chạy
-EXPOSE $PORT
+# Expose cổng
+EXPOSE 3000
 
 # Khởi động ứng dụng
 CMD ["npm", "start"]
