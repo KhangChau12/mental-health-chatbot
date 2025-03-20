@@ -4,13 +4,12 @@ FROM node:18-alpine
 # Thiết lập thư mục làm việc trong container
 WORKDIR /app
 
-# Sao chép package.json và package-lock.json (nếu có)
-COPY package.json package-lock.json* ./
+# Sao chép package.json
+COPY package.json ./
 
 # Cài đặt các dependencies
-# Sử dụng --frozen-lockfile để đảm bảo cài đặt chính xác phiên bản đã khóa trong package-lock.json
-# Sử dụng --production để không cài đặt devDependencies (tiết kiệm không gian)
-RUN npm ci
+# Sử dụng --only=production để không cài đặt devDependencies (tiết kiệm không gian)
+RUN npm install --only=production
 
 # Sao chép tất cả các file trong dự án
 COPY . .
