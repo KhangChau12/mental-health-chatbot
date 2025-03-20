@@ -1,0 +1,129 @@
+# Chatbot Sàng Lọc Sức Khỏe Tâm Thần
+
+## Tổng quan
+
+Dự án này là một ứng dụng web chatbot sàng lọc sức khỏe tâm thần, được xây dựng trên nền tảng Next.js và tích hợp với mô hình AI Llama 3.3 70B thông qua Together AI. Chatbot có khả năng:
+
+1. Thực hiện sàng lọc ban đầu về các vấn đề sức khỏe tâm thần phổ biến
+2. Đánh giá chi tiết theo các thang đo chuẩn (PHQ-9, GAD-7, DASS-21)
+3. Phát hiện nguy cơ tự tử và cung cấp tài nguyên khẩn cấp
+4. Tạo tóm tắt và đề xuất dựa trên mức độ nghiêm trọng
+5. Cung cấp thông tin và tài nguyên hỗ trợ
+
+## Cấu trúc dự án
+
+mental-health-chatbot/
+│
+├── app/                          # Thư mục chính (Next.js App Router)
+│   ├── api/                      # API endpoints
+│   │   └── ai/
+│   │       └── route.js          # API route xử lý yêu cầu AI
+│   │
+│   ├── globals.css               # CSS toàn cục
+│   ├── layout.js                 # Layout chính của ứng dụng
+│   └── page.js                   # Trang chính
+│
+├── components/                   # Các component React
+│   ├── Chat.jsx                  # Component chat chính
+│   ├── Footer.jsx                # Component footer
+│   ├── Header.jsx                # Component header
+│   └── Message.jsx               # Component hiển thị tin nhắn
+│
+├── data/                         # Dữ liệu tĩnh của ứng dụng
+│   ├── diagnostic.js             # Tiêu chí chẩn đoán từ DSM-5 và ICD-11
+│   ├── questionnaires.js         # Bộ câu hỏi đánh giá tiêu chuẩn
+│   └── resources.js              # Tài nguyên hỗ trợ
+│
+├── lib/                          # Các function tiện ích
+│   ├── chat-logic.js             # Logic xử lý chat
+│   ├── contextual-prompt.js      # Tạo prompt cho AI
+│   └── scoring.js                # Tính điểm đánh giá
+│
+├── .env.local                    # Biến môi trường (chứa API key)
+├── package.json                  # Cấu hình và dependencies
+└── tailwind.config.js            # Cấu hình Tailwind CSS
+
+
+## Tính năng chính
+
+- **Đánh giá tiêu chuẩn**: Sử dụng các bộ câu hỏi đã được nghiên cứu như PHQ-9, GAD-7, DASS-21
+- **Phản hồi tự nhiên**: Tích hợp AI để tạo phản hồi tự nhiên và đồng cảm
+- **Giao diện người dùng thân thiện**: UI/UX dễ sử dụng với hiệu ứng nhập liệu linh hoạt
+- **Hỗ trợ Markdown**: Hiển thị nội dung định dạng cho phản hồi phức tạp
+- **Chế độ kép**: Có thể chuyển đổi giữa AI (linh hoạt) và Logic cứng (tiêu chuẩn)
+- **Responsive**: Hoạt động tốt trên cả màn hình máy tính và thiết bị di động
+
+## Công nghệ sử dụng
+
+- **Frontend**: Next.js 14, React, Tailwind CSS
+- **State Management**: React Hooks
+- **AI Integration**: Together AI (Llama 3.3 70B)
+- **API**: Next.js API Routes với Streaming Response
+- **Styling**: Tailwind CSS, Typography Plugin
+- **Icons**: Lucide React
+
+## Đã đạt được
+
+1. **Cơ sở dữ liệu phong phú**:
+   - Tích hợp đầy đủ các bộ đánh giá tiêu chuẩn (PHQ-9, GAD-7, DASS-21)
+   - Thêm thông tin về tiêu chí chẩn đoán từ DSM-5 và ICD-11
+   - Tập hợp các tài nguyên hỗ trợ theo mức độ nghiêm trọng
+
+2. **Logic sàng lọc thông minh**:
+   - Hệ thống tính điểm và đánh giá mức độ nghiêm trọng
+   - Luồng đánh giá động dựa trên phản hồi của người dùng
+   - Phát hiện và xử lý đặc biệt các dấu hiệu nguy cơ tự tử
+
+3. **Tích hợp AI tiên tiến**:
+   - Kết nối với mô hình Llama 3.3 70B thông qua Together AI
+   - Tạo prompt động theo ngữ cảnh cuộc trò chuyện
+   - Streaming response cho trải nghiệm tự nhiên
+
+4. **UI/UX chuyên nghiệp**:
+   - Giao diện chat hiện đại với hiệu ứng đang nhập
+   - Hỗ trợ markdown cho định dạng phong phú
+   - Thiết kế responsive cho mọi thiết bị
+
+5. **Khả năng mở rộng cao**:
+   - Kiến trúc module hóa dễ dàng thêm bộ câu hỏi mới
+   - Dễ dàng cập nhật tài nguyên và tiêu chí
+   - Có thể mở rộng để lưu trữ dữ liệu và theo dõi tiến triển
+
+## Cách sử dụng
+
+1. **Cài đặt**:
+   ```bash
+   npm install
+   ```
+
+2. **Cấu hình**:
+   - Tạo file `.env.local` với API key Together AI:
+     ```
+     TOGETHER_API_KEY=your_api_key_here
+     ```
+
+3. **Chạy ứng dụng**:
+   ```bash
+   npm run dev
+   ```
+
+4. **Sử dụng chatbot**:
+   - Truy cập `http://localhost:3000`
+   - Trả lời các câu hỏi từ chatbot
+   - Sử dụng nút toggle để chuyển đổi giữa AI Mode và Logic Mode
+   - Nhận kết quả sàng lọc và tài nguyên hỗ trợ
+
+## Lưu ý
+
+- Chatbot này chỉ là công cụ sàng lọc sơ bộ, không phải công cụ chẩn đoán chính thức
+- Luôn khuyến khích người dùng tham khảo ý kiến chuyên gia sức khỏe tâm thần
+- Mỗi lần gọi API Together AI sẽ tính phí theo chính sách của họ
+- Để tiết kiệm chi phí, có thể sử dụng Logic Mode khi cần
+
+## Hướng phát triển tương lai
+
+- Tích hợp cơ sở dữ liệu để lưu trữ kết quả đánh giá
+- Thêm nhiều bộ đánh giá chuyên sâu (ADHD, Lưỡng cực, PTSD...)
+- Phát triển tính năng theo dõi tiến triển qua thời gian
+- Tạo dashboard và báo cáo chi tiết
+- Hỗ trợ đa ngôn ngữ và địa phương hóa tài nguyên
